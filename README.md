@@ -12,3 +12,7 @@
 ## Sorts
 - Bubble
 - Selection
+
+## Compile
+Compiled with a Makefile with this:  																																					    
+```g++ src/*.cpp -Idependencies/include -Wall -Ldependencies/lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -o main```
