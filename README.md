@@ -1,9 +1,12 @@
 # Simple Sorting Visualizer
 
 ## Controls
+#### Sort Controls
 - 1 - Bubble Sort
 - 2 - Selection Sort
-- Space - Randomize Array
+
+#### Array/Rectangle Controls
+- Space - Randomize array
 - Left Arrow - Make amount of rectangles smaller by 5
 - Right Arrow - Make amount of rectangles larger by 5
 - Up Arrow - Make the rate of sorting slower by 10
