@@ -1,4 +1,4 @@
-# BasicAlgoVisualizer
+# Basic Algorithm Visualizer
 
 ## Controls
 - 1 - Bubble Sort
