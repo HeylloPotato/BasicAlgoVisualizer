@@ -3,6 +3,7 @@
 
 #include "program.h"
 #include "Vector2.h"
+#include "sorts.h"
 
 program::program()
     : SCREEN_WIDTH(0), SCREEN_HEIGHT(0)
@@ -46,6 +47,15 @@ int program::running()
     {
         while (SDL_PollEvent(&event))
         {
+            if (event.type == SDL_KEYDOWN){
+                this->bubbleSort(Rectangles);
+                for (int i = 0; i < Rectangles.size(); i++)
+                {
+                    Rectangles[i].resetPosition(i);
+                    std::cout << Rectangles[i].getValue() << std::endl;
+                }
+            }
+
             if (event.type == SDL_QUIT){
                 return false;
             }
@@ -53,6 +63,7 @@ int program::running()
         this->draw();
     }
 
+    SDL_Quit();
     return 0;
 }
 
@@ -76,6 +87,69 @@ void program::draw()
     }
 
     SDL_RenderPresent(this->renderer);
+}
+
+enum Sorts{
+    bubble,
+    quick
+};
+
+struct program::lessThan
+{
+    inline bool operator() (rectangle& rect1, rectangle& rect2)
+    {
+        return (rect1.getValue() < rect2.getValue());
+    }
+};
+
+void program::sortRectangles(std::vector<rectangle> &Rects) {}
+
+void program::bubbleSort(std::vector<rectangle> &Rects)
+{
+    for (int j = 0; j < Rects.size() - 1; j++)
+    {
+        bool swapped = false;
+
+        for (int i = 0; i < Rects.size() - 1; i++)
+        {
+            if (Rects[i].getValue() > Rects[i + 1].getValue())
+            {
+                this->swap(Rects, i);
+                swapped = true;
+            }
+        }
+
+        if (!swapped)
+        {
+            break;
+        }
+    }
+}
+
+void program::swap(std::vector<rectangle> &Rects, int index)
+{    
+    Rects[index].setColor(Color(255, 0, 0, 255));
+    Rects[index+1].setColor(Color(255, 0, 0, 255));
+    this->draw();
+
+    Uint32 time = SDL_GetTicks();
+    Uint32 sTime = time;
+    int dTime = 200;
+
+    rectangle tempRect = Rects[index];
+    Rects[index] = Rects[index+1];
+    Rects[index+1] = tempRect;
+
+    Rects[index].resetPosition(index);
+    Rects[index+1].resetPosition(index+1);
+
+    while (time < sTime + dTime)
+    {
+        time = SDL_GetTicks();
+    }
+    Rects[index].setColor(Color(255, 255, 255, 255));
+    Rects[index+1].setColor(Color(255, 255, 255, 255));
+    this->draw();
 }
 
 int main(int argv, char** args)

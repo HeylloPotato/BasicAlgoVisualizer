@@ -13,10 +13,9 @@ private:
     SDL_Renderer* renderer;
     SDL_Event event;
 
-    std::vector<rectangle> Rectangles;
 
     const int SCREEN_WIDTH, SCREEN_HEIGHT;
-    int rectangleSize = 3;
+    int rectangleSize = 10;
 public:
     program();
     program(const char* title, Vector2 size);
@@ -25,4 +24,10 @@ public:
     int running();
     void createRectangles();
     void draw();
+    std::vector<rectangle> Rectangles;
+
+    struct lessThan;
+    void sortRectangles(std::vector<rectangle> &Rects);
+    void bubbleSort(std::vector<rectangle> &Rects);
+    void swap(std::vector<rectangle> &Rects, int index);
 };
