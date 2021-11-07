@@ -28,7 +28,6 @@ program::program(const char* title, Vector2 size)
     {
         std::cout << "Renderer could not be created! SDL_Error: %s\n" << SDL_GetError();
     }
-
     this->running();
 }
 
@@ -56,13 +55,46 @@ int program::running()
                     case SDLK_2:
                         this->selectionSort(Rectangles);
                         break;
+                    case SDLK_RIGHT:
+                        if (rectangleSize < 200)
+                        {
+                            rectangleSize += 5;
+                            while(SCREEN_WIDTH % rectangleSize != 0)
+                            {
+                                rectangleSize += 5;
+                            } 
+                            this->Rectangles.clear();
+                            this->createRectangles();
+                        }
+                        break;
+                    case SDLK_LEFT:
+                        if (rectangleSize > 5)
+                        {
+                            rectangleSize -= 5;
+                            while(SCREEN_WIDTH % rectangleSize != 0)
+                            {
+                                rectangleSize -= 5;
+                            } 
+                            this->Rectangles.clear();
+                            this->createRectangles();
+                        }
+                        break;
+                    case SDLK_UP:
+                        this->dTime += 10;
+                        std::cout << dTime << std::endl;
+                        break;
+                    case SDLK_DOWN:
+                        if(dTime > 0){
+                            this->dTime -= 10;
+                        }
+                        std::cout << dTime << std::endl;
+                        break;
                     case SDLK_SPACE:
                         this->Rectangles.clear();
                         this->createRectangles();
                         break;
                 }
             }
-                
 
             if (event.type == SDL_QUIT){
                 return false;
@@ -96,19 +128,6 @@ void program::draw()
 
     SDL_RenderPresent(this->renderer);
 }
-
-enum Sorts{
-    bubble,
-    quick
-};
-
-struct program::lessThan
-{
-    inline bool operator() (rectangle& rect1, rectangle& rect2)
-    {
-        return (rect1.getValue() < rect2.getValue());
-    }
-};
 
 void program::selectionSort(std::vector<rectangle> &Rects) 
 {
@@ -157,7 +176,6 @@ void program::swap(std::vector<rectangle> &Rects, int first, int second)
 
     Uint32 time = SDL_GetTicks();
     Uint32 sTime = time;
-    int dTime = 100;
 
     rectangle tempRect = Rects[first];
     Rects[first] = Rects[second];
