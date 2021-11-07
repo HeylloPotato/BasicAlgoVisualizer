@@ -15,7 +15,7 @@ private:
 
 
     const int SCREEN_WIDTH, SCREEN_HEIGHT;
-    int rectangleSize = 10;
+    int rectangleSize = 40;
 public:
     program();
     program(const char* title, Vector2 size);
@@ -27,7 +27,7 @@ public:
     std::vector<rectangle> Rectangles;
 
     struct lessThan;
-    void sortRectangles(std::vector<rectangle> &Rects);
+    void selectionSort(std::vector<rectangle> &Rects);
     void bubbleSort(std::vector<rectangle> &Rects);
-    void swap(std::vector<rectangle> &Rects, int index);
+    void swap(std::vector<rectangle> &Rects, int first, int second);
 };

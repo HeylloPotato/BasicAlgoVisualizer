@@ -3,7 +3,6 @@
 
 #include "program.h"
 #include "Vector2.h"
-#include "sorts.h"
 
 program::program()
     : SCREEN_WIDTH(0), SCREEN_HEIGHT(0)
@@ -47,9 +46,23 @@ int program::running()
     {
         while (SDL_PollEvent(&event))
         {
-            if (event.type == SDL_KEYDOWN){
-                this->bubbleSort(Rectangles);
+            if (event.type == SDL_KEYDOWN)
+            {
+                switch( event.key.keysym.sym)
+                {
+                    case SDLK_1:
+                        this->bubbleSort(Rectangles);
+                        break;
+                    case SDLK_2:
+                        this->selectionSort(Rectangles);
+                        break;
+                    case SDLK_SPACE:
+                        this->Rectangles.clear();
+                        this->createRectangles();
+                        break;
+                }
             }
+                
 
             if (event.type == SDL_QUIT){
                 return false;
@@ -97,7 +110,22 @@ struct program::lessThan
     }
 };
 
-void program::sortRectangles(std::vector<rectangle> &Rects) {}
+void program::selectionSort(std::vector<rectangle> &Rects) 
+{
+    int pos;
+    for (uint16_t i = 0; i < Rects.size() - 1; i++)
+    {
+        pos = i;
+        for (uint16_t j = i + 1; j < Rects.size(); j++)
+        {
+            if (Rects[j].getValue() < Rects[pos].getValue())
+            {
+                pos = j;
+            }
+        }
+        swap(Rects, pos, i);
+    }
+}
 
 void program::bubbleSort(std::vector<rectangle> &Rects)
 {
@@ -109,7 +137,7 @@ void program::bubbleSort(std::vector<rectangle> &Rects)
         {
             if (Rects[i].getValue() > Rects[i + 1].getValue())
             {
-                this->swap(Rects, i);
+                this->swap(Rects, i, i+1);
                 swapped = true;
             }
         }
@@ -121,29 +149,30 @@ void program::bubbleSort(std::vector<rectangle> &Rects)
     }
 }
 
-void program::swap(std::vector<rectangle> &Rects, int index)
+void program::swap(std::vector<rectangle> &Rects, int first, int second)
 {    
-    Rects[index].setColor(Color(255, 0, 0, 255));
-    Rects[index+1].setColor(Color(255, 0, 0, 255));
+    Rects[first].setColor(Color(255, 0, 0, 255));
+    Rects[second].setColor(Color(255, 0, 0, 255));
     this->draw();
 
     Uint32 time = SDL_GetTicks();
     Uint32 sTime = time;
-    int dTime = 200;
+    int dTime = 100;
 
-    rectangle tempRect = Rects[index];
-    Rects[index] = Rects[index+1];
-    Rects[index+1] = tempRect;
+    rectangle tempRect = Rects[first];
+    Rects[first] = Rects[second];
+    Rects[second] = tempRect;
 
-    Rects[index].resetPosition(index);
-    Rects[index+1].resetPosition(index+1);
+    Rects[first].resetPosition(first);
+    Rects[second].resetPosition(second);
 
     while (time < sTime + dTime)
     {
         time = SDL_GetTicks();
     }
-    Rects[index].setColor(Color(255, 255, 255, 255));
-    Rects[index+1].setColor(Color(255, 255, 255, 255));
+
+    Rects[first].setColor(Color(255, 255, 255, 255));
+    Rects[second].setColor(Color(255, 255, 255, 255));
     this->draw();
 }
 
