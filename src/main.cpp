@@ -49,11 +49,6 @@ int program::running()
         {
             if (event.type == SDL_KEYDOWN){
                 this->bubbleSort(Rectangles);
-                for (int i = 0; i < Rectangles.size(); i++)
-                {
-                    Rectangles[i].resetPosition(i);
-                    std::cout << Rectangles[i].getValue() << std::endl;
-                }
             }
 
             if (event.type == SDL_QUIT){
@@ -106,11 +101,11 @@ void program::sortRectangles(std::vector<rectangle> &Rects) {}
 
 void program::bubbleSort(std::vector<rectangle> &Rects)
 {
-    for (int j = 0; j < Rects.size() - 1; j++)
+    for (uint16_t j = 0; j < Rects.size() - 1; j++)
     {
         bool swapped = false;
 
-        for (int i = 0; i < Rects.size() - 1; i++)
+        for (uint16_t i = 0; i < Rects.size() - 1; i++)
         {
             if (Rects[i].getValue() > Rects[i + 1].getValue())
             {
