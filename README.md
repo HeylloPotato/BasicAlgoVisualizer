@@ -1,4 +1,16 @@
 # Simple Sorting Visualizer
+This is a sorting visualizer which you control via keys on a keyboard
+
+Currently has:
+- Bubble sort
+- Selection sort
+
+To be added:
+- Quicksort
+- Mergesort
+- Heapsort
+- Insertion sort
+- Bucket sort
 
 ## Controls
 #### Sort Controls
@@ -11,10 +23,6 @@
 - Right Arrow - Make amount of rectangles larger by 5
 - Up Arrow - Make the rate of sorting slower by 10
 - Down Arrow - Make the rate of sorting faster by 10
-
-## Sorts
-- Bubble
-- Selection
 
 ## Compile
 Compiled with a Makefile with this:  																																					    
