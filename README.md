@@ -1,21 +1,17 @@
 # Simple Sorting Visualizer
 This is a sorting visualizer which you control via keys on a keyboard
 
-Currently has:
-- Bubble sort
-- Selection sort
-
 To be added:
 - Quicksort
 - Mergesort
 - Heapsort
-- Insertion sort
 - Bucket sort
 
 ## Controls
 #### Sort Controls
 - 1 - Bubble Sort
 - 2 - Selection Sort
+- 3 - Insertion sort
 
 #### Array/Rectangle Controls
 - Space - Randomize array
