@@ -39,6 +39,27 @@ void sorts::bubbleSort(SDL_Renderer* renderer, std::vector<rectangle> &rects, in
     }
 }
 
+void sorts::selectionSort(SDL_Renderer* renderer, std::vector<rectangle> &rects, int sortTime) 
+{
+    // selection sort looks for the lowest number in the array
+    // Once it does that it places it at the front of the array
+    // then keeps swapping with the one next to it until its sorted
+
+    int pos;
+    for (uint16_t i = 0; i < rects.size() - 1; i++)
+    {
+        pos = i;
+        for (uint16_t j = i + 1; j < rects.size(); j++)
+        {
+            if (rects[j].getValue() < rects[pos].getValue())
+            {
+                pos = j;
+            }
+        }
+        sorts::swap(renderer, rects, pos, i, sortTime);
+    }
+}
+
 // Sorts end
 
 void sorts::swap(SDL_Renderer* renderer, std::vector<rectangle> &rects, int first, int second, int sortTime)

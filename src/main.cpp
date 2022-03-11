@@ -73,6 +73,9 @@ void program::mainLoop()
                     case SDLK_1:
                         sorts::bubbleSort(this->renderer, this->rectangles, this->sortSpeed);
                         break;
+                    case SDLK_2:
+                        sorts::selectionSort(this->renderer, this->rectangles, this->sortSpeed);
+                        break;
                 }                    
             }
 
