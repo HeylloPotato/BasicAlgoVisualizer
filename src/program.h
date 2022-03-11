@@ -1,9 +1,8 @@
-#pragma once 
-
-#include <vector>
+#pragma once
 
 #include <SDL2/SDL.h>
-#include "Vector2.h"
+#include <vector>
+#include "utils.h"
 #include "rectangle.h"
 
 class program
@@ -12,21 +11,31 @@ private:
     SDL_Window* window;
     SDL_Renderer* renderer;
     SDL_Event event;
-
     const int SCREEN_WIDTH, SCREEN_HEIGHT;
-    int rectangleSize = 40;
-    int dTime = 10;
+
+    // Array of all the rectangles
+    std::vector<rectangle> rectangles;
+
+    // check if sorting or not
+    bool sorting;
 public:
     program();
-    program(const char* title, Vector2 size);
+    // Construct the program object with the screen size
+    program(Vector2 ss);
     ~program();
 
-    int running();
-    void createRectangles();
-    void draw();
-    std::vector<rectangle> Rectangles;
+    // The main running loop of the program; Basically the heart
+    void mainLoop();
 
-    void selectionSort(std::vector<rectangle> &Rects);
-    void bubbleSort(std::vector<rectangle> &Rects);
-    void swap(std::vector<rectangle> &Rects, int first, int second);
+    // Set the back buffer
+    void draw();
+
+    // Create triangles
+    void createRectangle(int amt);
+    // Add rectangles to the array of rectangles
+    void addRectangles(int amt);
+    // Remove some amount of rectangles
+    void removeRectangles(int amt);
+
+    int sortSpeed = 10; 
 };

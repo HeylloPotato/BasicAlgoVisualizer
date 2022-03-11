@@ -1,201 +1,175 @@
-#include <SDL2/sdl.h>
 #include <iostream>
-
 #include "program.h"
-#include "Vector2.h"
+#include "sorts.h"
+
+using namespace sorts;
 
 program::program()
     : SCREEN_WIDTH(0), SCREEN_HEIGHT(0)
 {}
 
-program::program(const char* title, Vector2 size)
-    : SCREEN_WIDTH(size.x), SCREEN_HEIGHT(size.y)
+// Construct the program and then immediately assign SCREEN_WIDTH/HEIGHT
+program::program(Vector2 ss)
+    : SCREEN_WIDTH(ss.x), SCREEN_HEIGHT(ss.y)
 {
-    SDL_Init(SDL_INIT_EVERYTHING);
-    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+    // initialize SDLl, then check if it intialized
+    if (SDL_Init(SDL_INIT_EVERYTHING))
     {
-        std::cout << "SDL Could not initialize! SDL_Error: %s\n", SDL_GetError();
+        std::cout << "SDL could not initialize, SDL_ERROR: %s\n", SDL_GetError();
     }
 
-    this->window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-    if(window == NULL)
+    // Create a window, with the scree height and width variables
+    this->window = SDL_CreateWindow("Sorting Visualizer", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    // Create a renderer from the window
+    this->renderer = SDL_CreateRenderer(this->window, -1, 0);
+    // Check to see if either the window and or renderer couldn't be created
+    if (window == nullptr || renderer == nullptr)
     {
-        std::cout << "Window could not be created! SDL_Error: %s\n" << SDL_GetError();
+        std::cout << "Window and/or renderer could not be created, SDL_ERROR: %s\n", SDL_GetError();
     }
+    // Initialize all the starting rectangles
+    this->createRectangle(20);
 
-    this->renderer = SDL_CreateRenderer(window, -1, 0);
-    if (renderer == NULL)
-    {
-        std::cout << "Renderer could not be created! SDL_Error: %s\n" << SDL_GetError();
-    }
-    this->running();
+    //Get the program actually running; after initiliazing everything
+    this->mainLoop();
 }
 
-program::~program() 
-{
-    SDL_DestroyWindow(window);
-    SDL_DestroyRenderer(renderer);
-}
+program::~program() {}
 
-int program::running()
+void program::mainLoop()
 {
-    this->createRectangles();
-
-    while (true)
+    // While the program is running, this loop will run
+    bool running = true;
+    while(running)
     {
         while (SDL_PollEvent(&event))
         {
-            if (event.type == SDL_KEYDOWN)
+            // check to see if a key is down
+            if (event.type == SDL_KEYDOWN && !sorting)
             {
-                switch( event.key.keysym.sym)
+                // Check for keyboard; and what key
+                switch (event.key.keysym.sym)
                 {
-                    case SDLK_1:
-                        this->bubbleSort(Rectangles);
-                        break;
-                    case SDLK_2:
-                        this->selectionSort(Rectangles);
-                        break;
+                    // add x amt of rectangles when right arrow is pressed
                     case SDLK_RIGHT:
-                        if (rectangleSize < 200)
-                        {
-                            rectangleSize += 5;
-                            while(SCREEN_WIDTH % rectangleSize != 0)
-                            {
-                                rectangleSize += 5;
-                            } 
-                            this->Rectangles.clear();
-                            this->createRectangles();
-                        }
+                        addRectangles(5);
                         break;
+                    // remove x amt of rectangles when left arrow is pressed
                     case SDLK_LEFT:
-                        if (rectangleSize > 5)
-                        {
-                            rectangleSize -= 5;
-                            while(SCREEN_WIDTH % rectangleSize != 0)
-                            {
-                                rectangleSize -= 5;
-                            } 
-                            this->Rectangles.clear();
-                            this->createRectangles();
-                        }
+                        removeRectangles(5);
                         break;
+                    // add or remove sort speed; up arrow for faster; down for slower
                     case SDLK_UP:
-                        this->dTime += 10;
-                        std::cout << dTime << std::endl;
+                        sortSpeed = sorts::addSortSpeed(sortSpeed);
                         break;
                     case SDLK_DOWN:
-                        if(dTime > 0){
-                            this->dTime -= 10;
-                        }
-                        std::cout << dTime << std::endl;
+                        sortSpeed = sorts::removeSortSpeed(sortSpeed);
                         break;
+                    // reset rectangles
                     case SDLK_SPACE:
-                        this->Rectangles.clear();
-                        this->createRectangles();
+                        createRectangle(rectangles.size());
                         break;
-                }
+                    // Number on keyboard determines what sort
+                    case SDLK_1:
+                        sorts::bubbleSort(this->renderer, this->rectangles, this->sortSpeed);
+                        break;
+                }                    
             }
 
-            if (event.type == SDL_QUIT){
-                return false;
+            // stop the loop if the program is quit out of 
+            if (event.type == SDL_QUIT)
+            {
+                running = false;
             }
         }
+
+        // Draw everything to the backbuffer
         this->draw();
+        // Swap the back buffer and the front buffer; Rendering the scene
+        SDL_RenderPresent(this->renderer);
     }
 
+    // Cleanup and destroy everything
+    SDL_DestroyWindow(window);
+    SDL_DestroyRenderer(renderer);
     SDL_Quit();
-    return 0;
-}
-
-void program::createRectangles()
-{
-    for (uint8_t i = 0; i < this->rectangleSize; i++)
-    {
-        rectangle temp(SCREEN_HEIGHT, SCREEN_WIDTH, rand() % 400 + 100, rectangleSize, i);
-        Rectangles.push_back(temp);
-    }
 }
 
 void program::draw()
 {
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    // Change the background color to black, then put on back buffer
+    SDL_SetRenderDrawColor(this->renderer, 0, 0, 0, 255);
     SDL_RenderClear(this->renderer);
 
-    for (uint16_t i = 0; i < this->Rectangles.size(); i++)
+    for (uint8_t i = 0; i < this->rectangles.size(); i++)
     {
-         Rectangles[i].draw(renderer);
-    }
-
-    SDL_RenderPresent(this->renderer);
-}
-
-void program::selectionSort(std::vector<rectangle> &Rects) 
-{
-    int pos;
-    for (uint16_t i = 0; i < Rects.size() - 1; i++)
-    {
-        pos = i;
-        for (uint16_t j = i + 1; j < Rects.size(); j++)
-        {
-            if (Rects[j].getValue() < Rects[pos].getValue())
-            {
-                pos = j;
-            }
-        }
-        swap(Rects, pos, i);
+        // for every iteration of the loop draw each rectangle
+        rectangles[i].draw(this->renderer);
     }
 }
 
-void program::bubbleSort(std::vector<rectangle> &Rects)
+void program::createRectangle(int amt)
 {
-    for (uint16_t j = 0; j < Rects.size() - 1; j++)
+    // clear rectangles to make sure there are none
+    this->rectangles.clear();
+
+    // Loop through how many rectangles there will be
+    for (uint8_t i = 0; i < amt; i++)
     {
-        bool swapped = false;
+        // every time it loops through create a temp rectangle
+        // Set the value of rectangle between 100-400
+        // put it in ith place
+        rectangle temp(SCREEN_HEIGHT, SCREEN_WIDTH, rand() % 400 + 100, amt, i);
+        // take the temp rectangle and put it in the rectangles array
+        rectangles.push_back(temp);
+    }
+}
 
-        for (uint16_t i = 0; i < Rects.size() - 1; i++)
-        {
-            if (Rects[i].getValue() > Rects[i + 1].getValue())
-            {
-                this->swap(Rects, i, i+1);
-                swapped = true;
-            }
-        }
+void program::addRectangles(int amt)
+{
+    int tempAmt = rectangles.size();
 
-        if (!swapped)
+    // While tempAmt is lower than 200
+    // Keep adding amt to it
+    // until it is divisible by screen_width
+    while (tempAmt < 200){
+        tempAmt += amt;
+        if (this->SCREEN_WIDTH % tempAmt == 0)
         {
             break;
         }
     }
+
+    std::cout << tempAmt << std::endl;
+
+    // Clear the array; Create all the rectangles 
+    this->createRectangle(tempAmt);
 }
 
-void program::swap(std::vector<rectangle> &Rects, int first, int second)
-{    
-    Rects[first].setColor(Color(255, 0, 0, 255));
-    Rects[second].setColor(Color(255, 0, 0, 255));
-    this->draw();
+void program::removeRectangles(int amt)
+{
+    int tempAmt = rectangles.size();
 
-    Uint32 time = SDL_GetTicks();
-    Uint32 sTime = time;
-
-    rectangle tempRect = Rects[first];
-    Rects[first] = Rects[second];
-    Rects[second] = tempRect;
-
-    Rects[first].resetPosition(first);
-    Rects[second].resetPosition(second);
-
-    while (time < sTime + dTime)
-    {
-        time = SDL_GetTicks();
+    // While tempAmt is higher than 10
+    // Keep subtracting amt to it
+    // until it is divisible by screen_width
+    while (tempAmt > 10){
+        tempAmt -= amt;
+        if (this->SCREEN_WIDTH % tempAmt == 0)
+        {
+            break;
+        }
     }
 
-    Rects[first].setColor(Color(255, 255, 255, 255));
-    Rects[second].setColor(Color(255, 255, 255, 255));
-    this->draw();
+    std::cout << tempAmt << std::endl;
+
+    // Clear the array; Create all the rectangles 
+    this->createRectangle(tempAmt);
 }
 
 int main(int argv, char** args)
 {  
-    program Program("Visualizer", Vector2(800, 600));
+    // Create a program object, with the screen size (width, height)
+    program Program(Vector2(800, 600));
     return 0;
 }
