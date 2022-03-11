@@ -76,6 +76,9 @@ void program::mainLoop()
                     case SDLK_2:
                         sorts::selectionSort(this->renderer, this->rectangles, this->sortSpeed);
                         break;
+                    case SDLK_3:
+                        sorts::insertionSort(this->renderer, this->rectangles, this->sortSpeed);
+                        break;
                 }                    
             }
 

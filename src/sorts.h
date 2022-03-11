@@ -16,4 +16,5 @@ namespace sorts {
     //sorts
     void bubbleSort(SDL_Renderer* renderer, std::vector<rectangle> &rects, int sortTime);
     void selectionSort(SDL_Renderer* renderer, std::vector<rectangle> &rects, int sortTime); 
+    void insertionSort(SDL_Renderer* renderer, std::vector<rectangle> &rects, int sortTime);
 }

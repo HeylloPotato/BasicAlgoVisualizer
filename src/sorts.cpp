@@ -60,6 +60,23 @@ void sorts::selectionSort(SDL_Renderer* renderer, std::vector<rectangle> &rects,
     }
 }
 
+void sorts::insertionSort(SDL_Renderer* renderer, std::vector<rectangle> &rects, int sortTime)
+{
+    // insertion sort starts at the beginning of the array
+    // it compares from left to right, right next to each other
+    // once it finds one smaller it goes back and inserts it where it needs to be
+
+    for (uint16_t i = 0; i < rects.size(); i++)
+    {
+        uint16_t j = i;
+        while (j > 0 && rects[j-1].getValue() > rects[j].getValue())
+        {
+            sorts::swap(renderer, rects, j, j-1, sortTime);
+            j--;
+        }
+    }
+}
+
 // Sorts end
 
 void sorts::swap(SDL_Renderer* renderer, std::vector<rectangle> &rects, int first, int second, int sortTime)
