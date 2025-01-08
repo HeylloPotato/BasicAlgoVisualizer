@@ -3,14 +3,14 @@ This is a sorting visualizer which you control via keys on a keyboard
 
 # To do list
 General additions: <br/>
-	- Multi threaded sorting <br/>
-    - ImGUI Version
+- Multi threaded sorting <br/>
+- ImGUI Version
 
 Sorts: <br/>	
-	- Quicksort <br/>																																																																														
-	- Mergesort <br/>	   																																																																															
-	- Heapsort <br/>			
-	- Bucket sort <br/>	
+- Quicksort <br/>
+- Mergesort <br/>	
+- Heapsort <br/>			
+- Bucket sort <br/>	
     
 ## Controls
 #### Sort Controls
