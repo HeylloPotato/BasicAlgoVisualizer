@@ -1,17 +1,17 @@
 # Simple Sorting Visualizer
 This is a sorting visualizer which you control via keys on a keyboard
 
-#To do list
-General additions:
-    Multi threaded sorting
-    ImGUI Version
+# To do list
+General additions: <br/>
+	- Multi threaded sorting <br/>
+    - ImGUI Version
 
-Sorts:
-    - Quicksort
-    - Mergesort
-    - Heapsort
-    - Bucket sort
-
+Sorts: <br/>	
+	- Quicksort <br/>																																																																														
+	- Mergesort <br/>	   																																																																															
+	- Heapsort <br/>			
+	- Bucket sort <br/>	
+    
 ## Controls
 #### Sort Controls
 - 1 - Bubble Sort
