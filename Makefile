@@ -1,4 +1,4 @@
-SCRIPTS = src/*.cpp
+SCRIPTS = src/main.cpp src/rectangle.cpp src/sorts.cpp
 
 COMPILER = g++
 
