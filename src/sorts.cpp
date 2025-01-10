@@ -1,5 +1,6 @@
 #include <vector>
 #include <iostream>
+#include "program.h"
 #include "rectangle.h"
 #include "sorts.h"
 
@@ -21,12 +22,23 @@ void sorts::bubbleSort(SDL_Renderer* renderer, std::vector<rectangle> &rects, in
     // this is because if no swap happens after checking every one side by side
     // its already sorted!
 
+    bool finished = false;
     for (uint16_t i = 0; i < rects.size(); i++)
     {
         bool swapped = false;
 
         for (uint16_t j = 0; j < rects.size() - 1; j++)
         {
+            SDL_Event event;
+            while (SDL_PollEvent(&event)) {
+                if (event.type == SDL_QUIT) {
+                    finished = true;
+                    break;
+                }
+            }
+
+            if (finished) break;
+
             if (rects[j].getValue() > rects[j + 1].getValue())
             {
                 sorts::swap(renderer, rects, j, j+1, sortTime);
@@ -36,6 +48,9 @@ void sorts::bubbleSort(SDL_Renderer* renderer, std::vector<rectangle> &rects, in
 
         if (!swapped)
             break;
+
+        SDL_RenderPresent(renderer);
+        SDL_PumpEvents();
     }
 }
 
@@ -46,8 +61,19 @@ void sorts::selectionSort(SDL_Renderer* renderer, std::vector<rectangle> &rects,
     // then keeps swapping with the one next to it until its sorted
 
     int pos;
+    bool finished = false;
     for (uint16_t i = 0; i < rects.size() - 1; i++)
     {
+        SDL_Event event;
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT) {
+                finished = true;
+                break;
+            }
+        }
+
+        if (finished) break;
+
         pos = i;
         for (uint16_t j = i + 1; j < rects.size(); j++)
         {
@@ -58,6 +84,9 @@ void sorts::selectionSort(SDL_Renderer* renderer, std::vector<rectangle> &rects,
         }
         sorts::swap(renderer, rects, pos, i, sortTime);
     }
+
+    SDL_RenderPresent(renderer);
+    SDL_PumpEvents();
 }
 
 void sorts::insertionSort(SDL_Renderer* renderer, std::vector<rectangle> &rects, int sortTime)
@@ -66,8 +95,19 @@ void sorts::insertionSort(SDL_Renderer* renderer, std::vector<rectangle> &rects,
     // it compares from left to right, right next to each other
     // once it finds one smaller it goes back and inserts it where it needs to be
 
+    bool finished = false;
     for (uint16_t i = 0; i < rects.size(); i++)
     {
+        SDL_Event event;
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT) {
+                finished = true;
+                break;
+            }
+        }
+
+        if (finished) break;
+
         uint16_t j = i;
         while (j > 0 && rects[j-1].getValue() > rects[j].getValue())
         {
@@ -75,6 +115,9 @@ void sorts::insertionSort(SDL_Renderer* renderer, std::vector<rectangle> &rects,
             j--;
         }
     }
+
+    SDL_RenderPresent(renderer);
+    SDL_PumpEvents();
 }
 
 // Sorts end
